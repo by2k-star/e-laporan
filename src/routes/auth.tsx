@@ -13,7 +13,7 @@ import { Loader2, ShieldCheck } from "lucide-react";
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Masuk — SILAKAN" },
+      { title: "Masuk — E-Laporan" },
       { name: "description", content: "Sistem Laporan Kegiatan — Masuk ke dashboard" },
     ],
   }),
@@ -75,7 +75,7 @@ function AuthPage() {
           <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
             <ShieldCheck className="h-6 w-6" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight">SILAKAN</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">E-Laporan</h1>
           <p className="text-sm text-muted-foreground">Sistem Laporan Kegiatan</p>
         </div>
         <Card>
@@ -113,8 +113,8 @@ function AuthPage() {
               </Button>
             </form>
             <p className="mt-4 text-xs text-muted-foreground">
-              Default admin: <span className="font-mono">admin</span> /{" "}
-              <span className="font-mono">admin123</span>
+              Default admin: <span className="font-mono">-</span> /{" "}
+              <span className="font-mono">-</span>
             </p>
           </CardContent>
         </Card>
