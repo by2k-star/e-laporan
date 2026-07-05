@@ -60,21 +60,20 @@ async function upsertAdminProfile(userId: string) {
 /** Admin-only: create an operator account. */
 export const createOperator = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input) =>
-    z
-      .object({
-        username: z
-          .string()
-          .trim()
-          .min(3)
-          .max(40)
-          .regex(/^[a-zA-Z0-9_.-]+$/, "Only letters, numbers, . _ - allowed"),
-        password: z.string().min(6).max(72),
-        full_name: z.string().trim().min(1).max(120),
-        field_id: z.string().uuid(),
-      })
-      .parse(input),
-  )
+  .validator({
+  parse: (input) =>
+    z.object({
+      username: z
+        .string()
+        .trim()
+        .min(3)
+        .max(40)
+        .regex(/^[a-zA-Z0-9_.-]+$/, "Only letters, numbers, . _ - allowed"),
+      password: z.string().min(6).max(72),
+      full_name: z.string().trim().min(1).max(120),
+      field_id: z.string().uuid(),
+    }).parse(input),
+  })
   .handler(async ({ data, context }) => {
     const { data: isAdmin } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
@@ -112,16 +111,15 @@ export const createOperator = createServerFn({ method: "POST" })
 /** Admin-only: update operator profile (name, field, optional new password). */
 export const updateOperator = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input) =>
-    z
-      .object({
-        id: z.string().uuid(),
-        full_name: z.string().trim().min(1).max(120),
-        field_id: z.string().uuid(),
-        password: z.string().min(6).max(72).optional().or(z.literal("")),
-      })
-      .parse(input),
-  )
+  .validator({
+  parse: (input) =>
+    z.object({
+      id: z.string().uuid(),
+      full_name: z.string().trim().min(1).max(120),
+      field_id: z.string().uuid(),
+      password: z.string().min(6).max(72).optional().or(z.literal("")),
+    }).parse(input),
+})
   .handler(async ({ data, context }) => {
     const { data: isAdmin } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
@@ -148,7 +146,12 @@ export const updateOperator = createServerFn({ method: "POST" })
 /** Admin-only: delete an operator entirely. */
 export const deleteOperator = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
+  .validator({
+  parse: (input) =>
+    z.object({
+      id: z.string().uuid(),
+    }).parse(input),
+})
   .handler(async ({ data, context }) => {
     const { data: isAdmin } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
